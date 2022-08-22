@@ -1,5 +1,6 @@
 import React from 'react';
-import { selectAllUser } from './usersSlice';
+// import { selectAllUser } from './usersSlice';
+import { selectAllUser } from '../users/usersSlice';
 import { useSelector } from 'react-redux/es/exports';
 
 const PostAuthor = ({ userId }) => {
