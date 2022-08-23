@@ -26,11 +26,11 @@ const postsSlice = createSlice({
             prepare(title, content, userId) {
                 return {
                     payload: {
+                        id: nanoid(),
                         title,
                         content,
                         userId,
                         date: new Date().toISOString(),
-                        id: nanoid()
                     }
                 }
             }
