@@ -1,41 +1,33 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
+import axios from "axios";
 import { sub } from "date-fns";
 
-const initialState = [
-    {
-        id: 1,
-        title: 'Bang Bang',
-        content: "actor is Hrittik",
-        date: sub(new Date(), { minutes: 10 }).toISOString(),
-        reactions: {
-            thumbsUp: 0,
-            wow: 0,
-            heart: 0,
-            rocket: 0,
-            coffee: 0,
-        }
-    },
-    {
-        id: 2,
-        title: "Inception",
-        content: "actor is Leonardo de cap",
-        date: sub(new Date(), { minutes: 3 }).toISOString(),
-        reactions: {
-            thumbsUp: 0,
-            wow: 0,
-            heart: 0,
-            rocket: 0,
-            coffee: 0,
-        }
+const POSTS_URL = 'https://jsonplaceholder.typicode.com/posts';
+
+const initialState = {
+    posts: [],
+    status: 'idle', //'idle' | 'loading' | 'succeeded' | 'failed'
+    error: null
+}
+
+
+// GET request from server
+export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
+    try {
+        const response = await axios.get(POSTS_URL)
+        return [...response.data]
+    } catch (error) {
+        return error.message
     }
-]
+})
+
 const postsSlice = createSlice({
     name: "posts",
     initialState,
     reducers: {
         postAdded: {
             reducer(state, action) {
-                state.push(action.payload)
+                state.posts.push(action.payload)
             },
             prepare(title, content, userId) {
                 return {
@@ -56,29 +48,21 @@ const postsSlice = createSlice({
                 }
             }
         },
-
         reactionAdded(state, action) {
             const { postId, reaction } = action.payload
-            const existingPost = state.find(post => post.id === postId)
+            const existingPost = state.posts.find(post => post.id === postId)
 
             if (existingPost) {
                 existingPost.reactions[reaction]++
             }
         },
 
-        // reactionAdded: {
-        //     reducer(state, action) {
-        //         const { postId, reaction } = action.payload
-        //         const existingPost = state.find(post => post.id === postId)
-        //         if (existingPost) {
-        //             existingPost.reactions[reaction]++
-        //         }
-        //     },
-        //     prepare() { }
-        // },
+    },
+    extraReducers: () => {
+
     }
 })
 
-export const getAllPosts = state => state.posts
+export const getAllPosts = state => state.posts.posts
 export const { postAdded, reactionAdded } = postsSlice.actions
 export default postsSlice.reducer
