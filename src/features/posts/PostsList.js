@@ -1,13 +1,23 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import PostAuthor from './PostAuthor';
-import { getAllPosts } from './postsSlice';
+import { fetchPosts, getAllPosts, getAllPostState } from './postsSlice';
 import ReactionButtons from './ReactionButtons';
 import TimeAgo from './TimeAgo';
 
 
 const PostsList = () => {
+    const dispatch = useDispatch()
+
     const posts = useSelector(getAllPosts)
+    const postState = useSelector(getAllPostState)
+    console.log(postState);
+
+    // fetching Posts
+    useEffect(() => {
+        dispatch(fetchPosts())
+    }, [dispatch])
 
     // ordering post from newest to oldest
     const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))

@@ -12,10 +12,20 @@ const initialState = {
 
 
 // GET request from server
+// export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
+//     console.log('sd');
+//     try {
+//         const response = await axios.get(POSTS_URL)
+//         return [...response.data]
+//     } catch (error) {
+//         return error.message
+//     }
+// })
+
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
     try {
-        const response = await axios.get(POSTS_URL)
-        return [...response.data]
+        const fetchedPosts = await axios.get(POSTS_URL)
+        return fetchedPosts
     } catch (error) {
         return error.message
     }
@@ -58,11 +68,55 @@ const postsSlice = createSlice({
         },
 
     },
-    extraReducers: () => {
+    extraReducer: {
 
     }
+    // extraReducers(builder) {
+    //     builder
+    //         // if fetching is on pending
+    //         .addCase(fetchPosts.pending, (state, { payload }) => {
+    //             console.log(payload);
+    //             state.status = 'pending'
+    //         })
+
+    //         // if fetching is fulfilled
+    //         .addCase(fetchPosts.fulfilled, (state, { payload }) => {
+    //             console.log(payload);
+    //             state.status = 'fulfilled'
+    //         })
+    // },
+    // extraReducers: (builder) => {
+    //     builder
+    //         .addCase(fetchPosts.pending, (state, action) => {
+    //             state.status = 'pending'
+    //         })
+    //         .addCase(fetchPosts.fulfilled, (state, action) => {
+    //             state.status = 'succeeded';
+
+    //             let min = 1;
+    //             const loadedPosts = action.payload.map(post => {
+    //                 post.date = sub(new Date(), { minutes: min++ }).toISOString();
+    //                 post.reactions = {
+    //                     thumbsUp: 0,
+    //                     wow: 0,
+    //                     heart: 0,
+    //                     rocket: 0,
+    //                     coffee: 0
+    //                 }
+    //                 return post;
+    //             });
+
+    //             // Add any fetched posts to the array
+    //             state.posts = state.posts.concat(loadedPosts)
+    //         })
+    //         .addCase(fetchPosts.rejected, (state, action) => {
+    //             state.status = 'failed'
+    //             state.error = action.error.message
+    //         })
+    // }
 })
 
+export const getAllPostState = state => state.posts
 export const getAllPosts = state => state.posts.posts
 export const { postAdded, reactionAdded } = postsSlice.actions
 export default postsSlice.reducer

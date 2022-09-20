@@ -39,7 +39,7 @@ const AddPostForm = () => {
         <section>
             <h2>Add a New Post</h2>
             <form>
-                <label htmlFor="postTitle">Post Title:</label>
+                <label htmlFor="postTitle">Post Title Here:</label>
                 <input
                     type="text"
                     id="postTitle"
